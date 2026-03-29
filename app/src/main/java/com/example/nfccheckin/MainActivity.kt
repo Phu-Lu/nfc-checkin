@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         tvLastName = findViewById(R.id.tv_last_name)
         cardResult = findViewById(R.id.card_result)
 
-        // Setup NFC
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter == null) {
             tvStatus.text = "❌ Thiết bị không hỗ trợ NFC"
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
-
         intentFilters = arrayOf(
             IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED),
             IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
@@ -58,8 +56,6 @@ class MainActivity : AppCompatActivity() {
         tvStatus.text = "✅ Sẵn sàng — đưa thẻ NFC vào đọc"
     }
 
-    // ── NFC Foreground Dispatch ──────────────────────────────
-
     override fun onResume() {
         super.onResume()
         nfcAdapter?.enableForegroundDispatch(this, pendingIntent, intentFilters, null)
@@ -70,21 +66,16 @@ class MainActivity : AppCompatActivity() {
         nfcAdapter?.disableForegroundDispatch(this)
     }
 
-    // ── Nhận NFC intent ─────────────────────────────────────
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val action = intent.action
         if (action == NfcAdapter.ACTION_TAG_DISCOVERED ||
             action == NfcAdapter.ACTION_NDEF_DISCOVERED ||
             action == NfcAdapter.ACTION_TECH_DISCOVERED) {
-
             val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
             tag?.let { handleNfcId(bytesToHex(it.id)) }
         }
     }
-
-    // ── Xử lý NFC ID ────────────────────────────────────────
 
     private fun handleNfcId(nfcId: String) {
         tvStatus.text = "⏳ Đang xử lý: $nfcId"
@@ -100,8 +91,12 @@ class MainActivity : AppCompatActivity() {
                     tvLastName.text = "✅ $name"
                     tvStatus.text = "✅ Check-in: $name"
                 } else {
+                    // Thẻ chưa đăng ký → mở màn hình quản lý với ID điền sẵn
                     tvLastName.text = "❓ Thẻ chưa đăng ký"
-                    tvStatus.text = "❓ Không tìm thấy khách"
+                    tvStatus.text = "❓ Không tìm thấy — mở form tạo mới"
+                    val i = Intent(this@MainActivity, GuestManagerActivity::class.java)
+                    i.putExtra("new_nfc_id", nfcId)
+                    startActivity(i)
                 }
             } catch (e: Exception) {
                 tvLastName.text = "❌ Lỗi kết nối server"
@@ -110,8 +105,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    // ── Helpers ──────────────────────────────────────────────
 
     private fun bytesToHex(bytes: ByteArray): String {
         return bytes.joinToString("") { "%02X".format(it) }
