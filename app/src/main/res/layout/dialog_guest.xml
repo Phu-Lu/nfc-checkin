@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NFC ID (quét thẻ hoặc nhập tay)"
+        android:textSize="12sp"
+        android:textColor="#718096"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/et_nfc_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="VD: AABBCCDD"
+        android:inputType="textCapCharacters"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Họ tên *"
+        android:textSize="12sp"
+        android:textColor="#718096"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/et_ho_ten"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nguyễn Văn A"
+        android:inputType="textPersonName|textCapWords"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lời chào mừng *"
+        android:textSize="12sp"
+        android:textColor="#718096"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/et_loi_chao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Chào mừng anh/chị đến với chuyến đi!"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ghi chú (tuỳ chọn)"
+        android:textSize="12sp"
+        android:textColor="#718096"
+        android:layout_marginBottom="4dp"/>
+
+    <EditText
+        android:id="@+id/et_ghi_chu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ghế số 1, nhóm A..."/>
+
+</LinearLayout>

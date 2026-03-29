@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nfccheckin">
+
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="true"/>
+
+    <application
+        android:allowBackup="true"
+        android:label="Check-in"
+        android:theme="@style/Theme.NFCCheckin"
+        android:usesCleartextTraffic="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".GuestManagerActivity"
+            android:label="Quản lý khách"
+            android:parentActivityName=".MainActivity"
+            android:exported="false"/>
+
+    </application>
+</manifest>
