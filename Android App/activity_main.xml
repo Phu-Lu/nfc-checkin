@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#0a0a1a">
+
+    <!-- Header -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🚌 Check-in Xe Du Lịch"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- NFC Icon -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="📶"
+        android:textSize="80sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Status -->
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Đang khởi động..."
+        android:textSize="16sp"
+        android:textColor="#a0aec0"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Result card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:cardBackgroundColor="#1a1a2e"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_marginBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tv_last_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID: -"
+                android:textSize="13sp"
+                android:textColor="#718096"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Spacer -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Quản lý khách -->
+    <Button
+        android:id="@+id/btn_manage"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="👥 Quản lý khách"
+        android:textSize="16sp"
+        android:backgroundTint="#667eea"
+        android:textColor="#ffffff"/>
+
+</LinearLayout>

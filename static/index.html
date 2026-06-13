@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-in Xe Du Lịch</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0a0a1a;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── WELCOME SCREEN ── */
+  #screen-welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 40px;
+    animation: fadeIn 0.5s ease;
+  }
+
+  #screen-welcome .avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    margin-bottom: 32px;
+    box-shadow: 0 0 60px rgba(102,126,234,0.5);
+    animation: pulse 2s infinite;
+  }
+
+  #screen-welcome .name {
+    font-size: 72px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px rgba(255,255,255,0.3);
+  }
+
+  #screen-welcome .greeting {
+    font-size: 36px;
+    color: #a0aec0;
+    max-width: 900px;
+    line-height: 1.5;
+  }
+
+  #screen-welcome .note {
+    font-size: 24px;
+    color: #667eea;
+    margin-top: 16px;
+    background: rgba(102,126,234,0.15);
+    padding: 10px 28px;
+    border-radius: 50px;
+  }
+
+  /* ── IDLE SCREEN ── */
+  #screen-idle {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+
+  #screen-idle .idle-icon {
+    font-size: 100px;
+    margin-bottom: 24px;
+    opacity: 0.4;
+  }
+
+  #screen-idle .idle-text {
+    font-size: 32px;
+    color: #4a5568;
+  }
+
+  /* ── UNKNOWN SCREEN ── */
+  #screen-unknown {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+
+  #screen-unknown .unknown-icon {
+    font-size: 100px;
+    margin-bottom: 24px;
+  }
+
+  #screen-unknown .unknown-text {
+    font-size: 40px;
+    color: #fc8181;
+  }
+
+  /* ── FULL LIST SCREEN ── */
+  #screen-list {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    padding: 30px;
+  }
+
+  #screen-list h2 {
+    font-size: 32px;
+    color: #667eea;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .guest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .guest-card {
+    background: #1a1a2e;
+    border: 1px solid #2d2d4e;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .guest-card .card-name {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .guest-card .card-greeting {
+    font-size: 14px;
+    color: #718096;
+  }
+
+  .guest-card .card-note {
+    font-size: 13px;
+    color: #667eea;
+    margin-top: 6px;
+  }
+
+  /* ── TOGGLE BUTTON ── */
+  #btn-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #667eea;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 28px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
+    transition: background 0.2s;
+  }
+
+  #btn-toggle:hover { background: #5a67d8; }
+
+  /* ── STATUS DOT ── */
+  #status-dot {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fc8181;
+    transition: background 0.3s;
+  }
+
+  #status-dot.connected { background: #68d391; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 60px rgba(102,126,234,0.5); }
+    50%       { box-shadow: 0 0 90px rgba(102,126,234,0.8); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide {
+    animation: slideIn 0.4s ease forwards;
+  }
+</style>
+</head>
+<body>
+
+<!-- Status dot -->
+<div id="status-dot"></div>
+
+<!-- Toggle button -->
+<button id="btn-toggle" onclick="toggleView()">📋 Danh sách</button>
+
+<!-- Idle screen (default) -->
+<div id="screen-idle" style="display:flex">
+  <div class="idle-icon">🚌</div>
+  <div class="idle-text">Chờ quét thẻ...</div>
+</div>
+
+<!-- Welcome screen -->
+<div id="screen-welcome">
+  <div class="avatar">👤</div>
+  <div class="name" id="guest-name">-</div>
+  <div class="greeting" id="guest-greeting">-</div>
+  <div class="note" id="guest-note" style="display:none"></div>
+</div>
+
+<!-- Unknown tag screen -->
+<div id="screen-unknown">
+  <div class="unknown-icon">❓</div>
+  <div class="unknown-text">Thẻ chưa đăng ký</div>
+</div>
+
+<!-- Full list screen -->
+<div id="screen-list">
+  <h2>📋 Danh sách khách</h2>
+  <div class="guest-grid" id="guest-grid"></div>
+</div>
+
+<script>
+  let currentView = 'idle'; // idle | welcome | unknown | list
+  let welcomeTimer = null;
+  const WELCOME_DURATION = 8000; // 8 giây rồi về idle
+
+  // ── Screen management ──────────────────────────────────────
+  function showScreen(name) {
+    ['idle','welcome','unknown','list'].forEach(s => {
+      document.getElementById('screen-' + s).style.display = 'none';
+    });
+    const el = document.getElementById('screen-' + name);
+    el.style.display = 'flex';
+    if (name !== 'list') el.style.flexDirection = 'column';
+    currentView = name;
+
+    // Toggle button text
+    document.getElementById('btn-toggle').textContent =
+      name === 'list' ? '🏠 Về màn hình chính' : '📋 Danh sách';
+  }
+
+  function toggleView() {
+    if (currentView === 'list') {
+      showScreen('idle');
+    } else {
+      loadGuestList();
+      showScreen('list');
+    }
+  }
+
+  // ── Check-in display ───────────────────────────────────────
+  function showCheckin(data) {
+    if (welcomeTimer) clearTimeout(welcomeTimer);
+
+    document.getElementById('guest-name').textContent = data.ho_ten;
+    document.getElementById('guest-greeting').textContent = data.loi_chao;
+    const noteEl = document.getElementById('guest-note');
+    if (data.ghi_chu) {
+      noteEl.textContent = '🪑 ' + data.ghi_chu;
+      noteEl.style.display = '';
+    } else {
+      noteEl.style.display = 'none';
+    }
+
+    // Reset animation
+    const welcome = document.getElementById('screen-welcome');
+    welcome.classList.remove('animate-slide');
+    void welcome.offsetWidth; // reflow
+    welcome.classList.add('animate-slide');
+
+    showScreen('welcome');
+
+    welcomeTimer = setTimeout(() => {
+      if (currentView === 'welcome') showScreen('idle');
+    }, WELCOME_DURATION);
+  }
+
+  function showUnknown() {
+    if (welcomeTimer) clearTimeout(welcomeTimer);
+    showScreen('unknown');
+    welcomeTimer = setTimeout(() => {
+      if (currentView === 'unknown') showScreen('idle');
+    }, 4000);
+  }
+
+  // ── Guest list ─────────────────────────────────────────────
+  function loadGuestList() {
+    fetch('/guests')
+      .then(r => r.json())
+      .then(guests => {
+        const grid = document.getElementById('guest-grid');
+        grid.innerHTML = '';
+        guests.forEach(g => {
+          const card = document.createElement('div');
+          card.className = 'guest-card';
+          card.innerHTML = `
+            <div class="card-name">👤 ${g.ho_ten}</div>
+            <div class="card-greeting">${g.loi_chao}</div>
+            ${g.ghi_chu ? `<div class="card-note">🪑 ${g.ghi_chu}</div>` : ''}
+          `;
+          grid.appendChild(card);
+        });
+      });
+  }
+
+  // ── SSE connection ─────────────────────────────────────────
+  function connectSSE() {
+    const evtSource = new EventSource('/stream');
+    const dot = document.getElementById('status-dot');
+
+    evtSource.onopen = () => dot.classList.add('connected');
+    evtSource.onerror = () => {
+      dot.classList.remove('connected');
+      // Reconnect sau 3s
+      setTimeout(connectSSE, 3000);
+      evtSource.close();
+    };
+
+    evtSource.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.type === 'checkin') {
+        showCheckin(data);
+      } else if (data.type === 'unknown') {
+        showUnknown();
+      }
+    };
+  }
+
+  // ── Init ───────────────────────────────────────────────────
+  showScreen('idle');
+  connectSSE();
+</script>
+</body>
+</html>

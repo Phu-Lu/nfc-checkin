@@ -1,0 +1,12 @@
+# Requirements
+flask
+
+# Install trong Termux:
+# pkg install python
+# pip install flask
+
+# Chạy server:
+# python server.py
+
+# Truy cập từ TV:
+# http://192.168.43.1:5000
